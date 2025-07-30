@@ -1,139 +1,116 @@
 REST API with Gin Framework
-This is a RESTful API built using the Gin framework in Go, featuring user authentication, event management, and registration functionality.
+This is a RESTful API built using the Gin framework in Go, featuring user authentication, event management, and an event registration system.
 
-Features
-User authentication (signup/login) with JWT tokens
+✅ Features
+🔐 User authentication (Signup / Login) with JWT tokens
 
-Password hashing for secure storage
+🔑 Password hashing using bcrypt for secure storage
 
-CRUD operations for events
+📅 Full CRUD operations for events
 
-Event registration system
+✅ Event registration & cancellation
 
-SQLite database backend
+🗄 SQLite database backend
 
-Middleware for authentication
+🔒 Middleware for route authentication
 
-API Endpoints
+⏳ JWT token expiration (2 hours)
+
+📌 API Endpoints
+
 Authentication
-POST /signup - Create a new user account
 
-POST /login - Authenticate and receive a JWT token
+| Method | Endpoint  | Description                  |
+| ------ | --------- | ---------------------------- |
+| POST   | `/signup` | Create a new user account    |
+| POST   | `/login`  | Authenticate and receive JWT |
 
 Events (Public)
-GET /events - Get all events
 
-GET /events/:id - Get a specific event
+| Method | Endpoint      | Description          |
+| ------ | ------------- | -------------------- |
+| GET    | `/events`     | Get all events       |
+| GET    | `/events/:id` | Get a specific event |
 
 Events (Authenticated)
-POST /events - Create a new event
 
-PUT /events/:id - Update an event
+| Method | Endpoint               | Description           |
+| ------ | ---------------------- | --------------------- |
+| POST   | `/events`              | Create a new event    |
+| PUT    | `/events/:id`          | Update an event       |
+| DELETE | `/events/:id`          | Delete an event       |
+| POST   | `/events/:id/register` | Register for an event |
+| DELETE | `/events/:id/register` | Cancel registration   |
 
-DELETE /events/:id - Delete an event
+🗄 Database Schema
+The application uses SQLite with these tables:
 
-POST /events/:id/register - Register for an event
+| Column   | Type    | Description       |
+| -------- | ------- | ----------------- |
+| id       | INTEGER | Primary Key       |
+| email    | TEXT    | Unique user email |
+| password | TEXT    | Hashed password   |
 
-DELETE /events/:id/register - Cancel registration for an event
+events
+| Column      | Type     | Description            |
+| ----------- | -------- | ---------------------- |
+| id          | INTEGER  | Primary Key            |
+| name        | TEXT     | Event name             |
+| description | TEXT     | Event details          |
+| location    | TEXT     | Event location         |
+| dateTime    | DATETIME | Event date & time      |
+| user\_id    | INTEGER  | Foreign Key → users.id |
 
-Database Schema
-The application uses SQLite with the following tables:
+registrations
 
-users - Stores user information
+| Column    | Type    | Description                               |
+| --------- | ------- | ----------------------------------------- |
+| id        | INTEGER | Primary Key                               |
+| event\_id | INTEGER | Foreign Key → events.id ON DELETE CASCADE |
+| user\_id  | INTEGER | Foreign Key → users.id ON DELETE CASCADE  |
 
-id (INTEGER PRIMARY KEY)
+⚙️ Setup Instructions
+Install Go (version 1.24.5+ recommended)
 
-email (TEXT, UNIQUE)
-
-password (TEXT)
-
-events - Stores event information
-
-id (INTEGER PRIMARY KEY)
-
-name (TEXT)
-
-description (TEXT)
-
-location (TEXT)
-
-dateTime (DATETIME)
-
-user_id (INTEGER, FOREIGN KEY to users)
-
-registrations - Tracks event registrations
-
-id (INTEGER PRIMARY KEY)
-
-event_id (INTEGER, FOREIGN KEY to events)
-
-user_id (INTEGER, FOREIGN KEY to users)
-
-Setup Instructions
-Ensure you have Go installed (version 1.24.5 or later recommended)
-
-Clone the repository
+Clone the repository:
+git clone https://github.com/yourusername/your-repo-name.git
+cd your-repo-name
 
 Install dependencies:
 
-bash
 go mod tidy
+
 Run the application:
-
-bash
 go run main.go
-The API will be available at http://localhost:8080
 
-Configuration
-The database file (api.db) will be created automatically in the project directory
+The API will be available at:y
+http://localhost:8080
 
-JWT secret key is set in utils/jwt.go (should be changed in production)
+🔑 Configuration
+SQLite database file: api.db (auto-created)
 
-Dependencies
-Gin (Web framework)
+JWT secret key: Set in utils/jwt.go → change before production
 
-SQLite (Database)
+Token expiration: 2 hours
 
-JWT (Authentication)
-
-bcrypt (Password hashing)
-
-Project Structure
-text
-.
+📂 Project Structure
 ├── main.go            # Application entry point
 ├── db
 │   └── db.go          # Database initialization and schema
 ├── models
-│   ├── event.go       # Event model and database operations
-│   └── user.go        # User model and database operations
+│   ├── event.go       # Event model and DB functions
+│   └── user.go        # User model and DB functions
 ├── routes
-│   ├── events.go      # Event-related routes
-│   ├── register.go    # Event registration routes
-│   ├── routes.go      # Route registration
-│   └── users.go       # User authentication routes
+│   ├── events.go      # Event routes
+│   ├── register.go    # Registration routes
+│   ├── routes.go      # Route handler
+│   └── users.go       # User auth routes
 ├── middlewares
-│   └── auth.go        # Authentication middleware
+│   └── auth.go        # JWT authentication middleware
 └── utils
-    ├── hash.go        # Password hashing utilities
-    └── jwt.go         # JWT token utilities
-Security Considerations
-Passwords are hashed before storage
+    ├── hash.go        # Password hashing
+    └── jwt.go         # JW
 
-Authentication is required for sensitive operations
 
-JWT tokens expire after 2 hours
 
-Database connection limits are set to prevent resource exhaustion
 
-Testing
-You can test the API using tools like Postman or cURL. Ensure to:
-
-First sign up a user
-
-Login to get a JWT token
-
-Use the token in the Authorization header for protected routes
-
-License
-This project is open-source and available for use under the MIT License.
