@@ -69,48 +69,6 @@ registrations
 | event\_id | INTEGER | Foreign Key → events.id ON DELETE CASCADE |
 | user\_id  | INTEGER | Foreign Key → users.id ON DELETE CASCADE  |
 
-⚙️ Setup Instructions
-Install Go (version 1.24.5+ recommended)
-
-Clone the repository:
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
-
-Install dependencies:
-
-go mod tidy
-
-Run the application:
-go run main.go
-
-The API will be available at:y
-http://localhost:8080
-
-🔑 Configuration
-SQLite database file: api.db (auto-created)
-
-JWT secret key: Set in utils/jwt.go → change before production
-
-Token expiration: 2 hours
-
-📂 Project Structure
-├── main.go            # Application entry point
-├── db
-│   └── db.go          # Database initialization and schema
-├── models
-│   ├── event.go       # Event model and DB functions
-│   └── user.go        # User model and DB functions
-├── routes
-│   ├── events.go      # Event routes
-│   ├── register.go    # Registration routes
-│   ├── routes.go      # Route handler
-│   └── users.go       # User auth routes
-├── middlewares
-│   └── auth.go        # JWT authentication middleware
-└── utils
-    ├── hash.go        # Password hashing
-    └── jwt.go         # JW
-
 
 
 
